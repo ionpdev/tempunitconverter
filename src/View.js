@@ -2,16 +2,68 @@ import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 
+import {
+  leftValueInputMsg,
+  rightValueInputMsg,
+  leftUnitChangedMsg,
+  rightUnitChangedMsg,
+} from './Update'
+
 const {
   div,
   h1,
   pre,
+  input,
+  select,
+  option,
 } = hh(h);
 
+const UNITS = ['Fahrenheit', 'Celsius', 'Kelvin']
+
+function unitOptions(slectedUnit) {
+  return R.map(
+    unit => option({ value: unit, selected: slectedUnit === unit }, unit),
+    UNITS
+  )
+}
+
+function unitSelection(dispatch, unit, value, inputMsg, unitMsg) {
+  return div({ className: 'w-50 ma1' }, [
+    input({
+      type: 'text',
+      className: 'db w-100 mv2 pa2 input-reset ba',
+      value,
+      oninput: e => dispatch(inputMsg(e.target.value)),
+    }),
+    select(
+      {
+        className: 'db w-100 pa2 ba input-reset br1 bg-white ba b--black',
+        onchange: e => dispatch(unitMsg(e.target.value))
+      },
+      unitOptions(unit)
+    ),
+  ])
+}
 
 function view(dispatch, model) {
   return div({ className: 'mw6 center' }, [
     h1({ className: 'f2 pv2 bb' }, 'Temperature Unit Converter'),
+    div({ className: 'flex' }, [
+      unitSelection(
+        dispatch,
+        model.leftUnit,
+        model.leftValue,
+        leftValueInputMsg,
+        leftUnitChangedMsg,
+      ),
+      unitSelection(
+        dispatch,
+        model.rightUnit,
+        model.rightValue,
+        rightValueInputMsg,
+        rightUnitChangedMsg,
+      ),
+    ]),
     pre(JSON.stringify(model, null, 2)),
   ]);
 }

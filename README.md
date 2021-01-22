@@ -6,6 +6,5 @@
 
 
 # Final App:
-## Initial State
 
 ![Initial State](/img/app.png)
