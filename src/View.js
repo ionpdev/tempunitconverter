@@ -64,7 +64,7 @@ function view(dispatch, model) {
         rightUnitChangedMsg,
       ),
     ]),
-    pre(JSON.stringify(model, null, 2)),
+    // pre(JSON.stringify(model, null, 2)),
   ]);
 }
 
